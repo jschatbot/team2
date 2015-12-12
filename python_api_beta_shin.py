@@ -4,6 +4,7 @@
 import json
 import requests
 import random
+import Mecab
 
 class API:
     def __init__(self, base, proxy_host=None, proxy_port=None):
@@ -31,7 +32,7 @@ class API:
         return requests.post(self.base+'/tk/rewrite', json={'rule': 'rewrite_c08.txt', 'morphs': morphs}, auth=self.auth, verify=False).json()['morphs']
         #return requests.post(self.base+'/tk/rewrite', data={'rule': 'rewrite_c08.txt', 'morphs': morphs}, auth=self.auth, verify=False).json()['morphs']
 
-    # 形態素列書き換え器
+    # シナリオ変換器
     def trigger(self, morphs):
         return requests.post(self.base+'/tk/trigger', json={'rule': 'scenario_c08.txt', 'morphs': morphs}, auth=self.auth, verify=False).json()['texts']
 
