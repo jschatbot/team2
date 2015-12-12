@@ -32,8 +32,7 @@ class API:
 
     # 形態素列書き換え器
     def trigger(self, morphs):
-        payload = {'rule': 'scenario_c08.txt', 'morphs': morphs}
-        return requests.post(self.base+'/tk/trigger', data=json.dumps(payload), auth=self.auth, verify=False)
+        return requests.post(self.base+'/tk/trigger', json={'rule': 'scenario_c08.txt', 'morphs': morphs}, auth=self.auth, verify=False).json()['texts']
 
     # ツイート検索
     def search_tweet(self, query):
@@ -63,5 +62,7 @@ api = API('https://52.68.75.108')
 api.basic_auth('secret', 'js2015cps')
 
 #print ' '.join(api.markov_chain({"surface":"ゴリラ", "norm_surface":"ゴリラ", "pos":"一般名詞"}))
-print ' '.join(api.rewrite(["BOS:BOS", "あたくし:代名詞", "EOS:EOS"]))
+#print ' '.join(api.rewrite(["BOS:BOS", "あたくし:代名詞", "EOS:EOS"]))
+print ' '.join(api.trigger(["BOS:BOS", "おはよう:感動詞", "EOS:EOS"]))
+
 #print api.rewrite(["BOS:BOS", "むくり:感動詞", "EOS:EOS"]).text
