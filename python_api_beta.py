@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import requests
 import json
-from requests.auth import HTTPBasicAuth
-import urllib
-import urllib2
+import requests
 
 class API:
     def __init__(self, base, proxy_host=None, proxy_port=None):
@@ -34,7 +31,8 @@ class API:
 
     # 形態素列書き換え器
     def trigger(self, morphs):
-        return requests.post(self.base+'/tk/trigger', params={'rule': 'test_rule_kamo.txt', 'morphs': ["BOS:BOS", "むくり:感動詞", "EOS:EOS"]}, auth=self.auth, verify=False).text
+        payload = {'rule': 'test_rule_kamo.txt', 'morphs': morphs}
+        return requests.post(self.base+'/tk/trigger', data=json.dumps(payload), auth=self.auth, verify=False)
 
     # ツイート検索
     def search_tweet(self, query):
@@ -60,7 +58,7 @@ class API:
 requests.packages.urllib3.disable_warnings()
 
 # APIの設定
-api = API('https://52.68.75.108/')
+api = API('https://52.68.75.108')
 api.basic_auth('secret', 'js2015cps')
 
-print api.trigger(["BOS:BOS", "むくり:感動詞", "EOS:EOS"])
+print api.trigger(["BOS:BOS", "むくり:感動詞", "EOS:EOS"]).text
