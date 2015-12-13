@@ -6,6 +6,11 @@ import requests
 import random
 from api import * 
 
+# 天気予報関係
+import urllib2
+import datetime
+import xml.etree.ElementTree as ET
+
 def to_chainform(morphs):
     return '%s:%s' % (morphs[u'norm_surface'],morphs[u'pos'])
     #morphs.map {|m| m['norm_surface'] + ':' + m['pos'] }
@@ -55,6 +60,23 @@ def build_tweet(mention):
     print texts[0]
     return texts[0]
 
+# 天気予報(東京)情報を取得するAPI
+def get_weather():
+    d = datetime.datetime.today()
+    today = '{year}/{month}/{day}'.format(year=d.year, month=str(d.month).zfill(2), day=str(d.day).zfill(2))
+    url  = "http://www.drk7.jp/weather/xml/13.xml"
+    res = urllib2.urlopen(url)
+    feed = res.read()
+    tree = ET.fromstring(feed)
+    weather = tree.findall(".//area[4]/info[@date='{date}']/weather".format(date=today))
+    chance = tree.findall(".//area[4]/info[@date='{date}']/rainfallchance/period".format(date=today))
+    temp = tree.findall(".//area[4]/info[@date='{date}']/temperature/range".format(date=today))
+    return {"tenki": weather[0].text.encode('utf-8'),
+            "chance_am": chance[1].text,
+            "chance_pm": chance[2].text,
+            "chance_night": chance[3].text,
+            "temp_high": temp[0].text,
+            "temp_low": temp[1].text}
 
 # 警告を無視するための設定
 requests.packages.urllib3.disable_warnings()
@@ -64,16 +86,17 @@ api = API('https://52.68.75.108')
 api.basic_auth('secret', 'js2015cps')
 name = 'js_devbot02'
 
-
-if name:
-    rs = api.get_reply(name)
-    print rs
-    for r in rs['replies']:
-        t = build_tweet(r['text'].strip().encode('utf-8'))
-        api.send_reply(name, r['mention_id'], r['user_name'], t) #t
-else:
-  pass
-  #ARGF.each do |line|
+#if name:
+#    rs = api.get_reply(name)
+#    print rs
+#    for r in rs['replies']:
+#        if '天気' in t['text']:
+#
+#        t = build_tweet(r['text'].strip().encode('utf-8'))
+#        api.send_reply(name, r['mention_id'], r['user_name'], t) #t
+#else:
+#  pass
+#  #ARGF.each do |line|
   #  puts build_tweet(line.rstrip)
 
 
