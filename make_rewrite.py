@@ -7,14 +7,13 @@ import random
 import sys
 
 """
+入力：
 python make_scenario.py 入力1 入力2
 python make_scenario.py こんにちは はろおおおおおおおお
 
-出力：シナリオのルール
+出力：リライトのルール
 BOS:BOS こんにちは:感動詞 EOS:EOS   はろおおおおおおおお
 """
-
-
 
 class API:
     def __init__(self, base, proxy_host=None, proxy_port=None):
@@ -88,12 +87,20 @@ api = API('https://52.68.75.108')
 api.basic_auth('secret', 'js2015cps')
 name = 'js_devbot02'
 
-mentions = []
-mention = sys.argv[1].strip()
-for sent in api.sentences(mention)['sentences']:
+mentions1 = []
+mention1 = sys.argv[1].strip()
+mentions2 = []
+mention2 = sys.argv[2].strip()
+for sent in api.sentences(mention1)['sentences']:
     for m in api.morphs(sent)['morphs']:
-        mentions.append(to_chainform(m))
-print "%s\t%s" % (' '.join(mentions), sys.argv[2])
+        ##print to_chainform(m),
+        mentions1.append(to_chainform(m))
+for sent in api.sentences(mention2)['sentences']:
+    for m in api.morphs(sent)['morphs']:
+        mentions2.append(to_chainform(m))
+
+
+print "%s\t%s" % (' '.join(mentions1[1:-1]), ' '.join(mentions2[1:-1]))
 
 
 
