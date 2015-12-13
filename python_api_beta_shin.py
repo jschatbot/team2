@@ -4,6 +4,7 @@
 import json
 import requests
 import random
+import tweepy
 from api import * 
 
 # 天気予報関係
@@ -25,6 +26,16 @@ def to_string(chain):
     return l
     #chain[1...-1].map {|m| m.split(/:/)[0] }.join
 
+def get_name(screen_name):
+    consumer_key = "zZ2LrsIRPtgRfC9hCshRItf4N"
+    consumer_secret = "t5zCvheQNu2nYjd1Kovh0jo970pnV5xt4AolrxMcBTCoXs8eWL"
+    access_token = "4445286687-w2Zar27rxyfKSbQcMhyUhS1RmVU5UE8A52vvqrY"
+    access_secret = "bXVd3ZcUSsu44KKFdHE1W1cin96sp02XdMlfmt5tk2AAp"
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_secret)
+    api = tweepy.API(auth)
+    user = api.get_user(screen_name)
+    return user.name
 
 def build_tweet(mention, grade):
     print grade
