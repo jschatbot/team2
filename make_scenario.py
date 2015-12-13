@@ -93,8 +93,17 @@ mention = sys.argv[1].strip()
 for sent in api.sentences(mention)['sentences']:
     for m in api.morphs(sent)['morphs']:
         mentions.append(to_chainform(m))
-print "%s\t%s" % (' '.join(mentions), sys.argv[2])
-
+print "%s\t%s" % (' '.join(mentions), sys.argv[2].decode("utf-8"))
+a=open("2_scenario2.txt","a")
+st = " ".join(mentions)
+st = st.split()[1:-1]
+j=""
+for i in st[:-1]:
+    j+=i+" "
+j+=st[-1]
+st = "%s\t%s\n" % (j, sys.argv[2].decode("utf-8"))
+a.write(st.encode("utf-8"))
+a.close()
 
 
 #print ' '.join(api.markov_chain({"surface":"ゴリラ", "norm_surface":"ゴリラ", "pos":"一般名詞"}))

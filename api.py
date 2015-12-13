@@ -22,6 +22,9 @@ class API:
     def morphs(self, s):
         return requests.get(self.base+'/jmat/morph', params={'query': s}, auth=self.auth, verify=False).json()
 
+    def synonym(self, s):
+        return requests.get(self.base+'/jmat/synonym', params={'query': s}, auth=self.auth, verify=False).json()
+
     # Markov連鎖生成器
     def markov_chain(self, seed):
         return requests.get(self.base+'/tk/markov', params={'surface': seed['norm_surface'].encode('utf-8'), 'pos': seed['pos'].encode('utf-8')}, auth=self.auth, verify=False).json()['morphs']
@@ -45,6 +48,8 @@ class API:
             fileName = "2_scenario1.txt"
         if(grade == 2):
             fileName = "2_scenario2.txt"
+            #fileName="6_scenario_c00_grade0.txt"
+        
         return requests.post(self.base+'/tk/trigger', json={'rule': fileName, 'morphs': morphs}, auth=self.auth, verify=False).json()['texts']
 
     # ツイート検索
@@ -67,4 +72,7 @@ class API:
     def send_reply(self, name, mention_id, user_name, message):
         return requests.post(self.base+'/tweet/send_reply', json={'bot_name': name, 'replies': [{'mention_id': mention_id, 'user_name': user_name, 'message': message}]}, auth=self.auth, verify=False).json()[0] == 'true'
 
-
+    def debag(self,s,grade):
+        
+        a=morph(s)
+    
