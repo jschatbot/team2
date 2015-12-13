@@ -13,6 +13,9 @@ import datetime
 import xml.etree.ElementTree as ET
 # 定期ツイート
 import random
+#word2vec関係
+import w2v_dialog
+
 
 def to_chainform(morphs):
     return '%s:%s' % (morphs[u'norm_surface'],morphs[u'pos'])
@@ -42,6 +45,18 @@ def build_tweet(mention, grade):
     print grade
     seeds = []
     mentions = []
+
+    #word2vec
+    mentions1 = []
+    for m in api.morphs(api.sentences(mention)['sentences'][0])['morphs']:
+        mentions1.append(to_chainform(m).split(':')[0])
+    r_now = ' '.join(mentions1)[4:-4]
+    SV = w2v_dialog.sentence_vectorizer('matrix25.w7.model')
+    w2v_list = SV.use_database('NTCIR.wakati.u20', r_now.encode('utf-8'))
+    seeds.append(''.join(w2v_list[0].split()))
+    seeds.append(''.join(w2v_list[1].split()))
+    seeds.append(''.join(w2v_list[2].split()))
+
     for sent in api.sentences(mention)['sentences']:
         for m in api.morphs(sent)['morphs']:
             mentions.append(to_chainform(m))
