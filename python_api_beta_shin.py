@@ -44,9 +44,12 @@ def build_tweet(mention, grade):
             #print s[u'norm_surface']
             c = api.markov_chain(s)
             texts.append(to_string(api.rewrite(c, grade)))
-
-    texts += api.trigger(mentions, grade)
-    #print '\n'.join(texts)
+    print " ".join(mentions)
+    trigger_result = api.trigger(mentions, grade)
+    texts += trigger_result
+    texts += trigger_result
+    texts += trigger_result
+    print '\n'.join(trigger_result)
 
     for s in seeds:
         #print api.search_tweet(s[u'norm_surface'])
@@ -58,6 +61,8 @@ def build_tweet(mention, grade):
             for sent in api.sentences(t)['sentences']:
                 texts.append(to_string(api.rewrite([to_chainform(m) for m in api.morphs(sent)['morphs']], grade)))
                 #print to_string(api.rewrite([to_chainform(m) for m in api.morphs(sent)['morphs']]))
+
+    #print "\n".join(texts)
 
     random.shuffle(texts)
     print texts[0]
@@ -126,7 +131,7 @@ if name:
     print rs
     weather = get_weather()
     grade = rs['grade']
-    grade = 1
+    grade = 2
     for r in rs['replies']:
         if u"天気" in r['text']:
             if(grade == 2):
