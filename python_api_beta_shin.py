@@ -24,7 +24,8 @@ def to_string(chain):
     #chain[1...-1].map {|m| m.split(/:/)[0] }.join
 
 
-def build_tweet(mention):
+def build_tweet(mention, grade):
+    print grade
     seeds = []
     mentions = []
     for sent in api.sentences(mention)['sentences']:
@@ -42,18 +43,18 @@ def build_tweet(mention):
             c = api.markov_chain(s)
             texts.append(to_string(api.rewrite(c)))
 
-    texts += api.trigger(mentions)
+    texts += api.trigger(mentions, grade)
     #print '\n'.join(texts)
 
     for s in seeds:
         #print api.search_tweet(s[u'norm_surface'])
         for t in api.search_tweet(s[u'norm_surface'])[u'texts']:
             for sent in api.sentences(t)['sentences']:
-                texts.append(to_string(api.rewrite([to_chainform(m) for m in api.morphs(sent)['morphs']])))
+                texts.append(to_string(api.rewrite([to_chainform(m) for m in api.morphs(sent)['morphs']], grade)))
                 #print to_string(api.rewrite([to_chainform(m) for m in api.morphs(sent)['morphs']]))
         for t in api.search_reply(s[u'norm_surface'])[u'texts']:
             for sent in api.sentences(t)['sentences']:
-                texts.append(to_string(api.rewrite([to_chainform(m) for m in api.morphs(sent)['morphs']])))
+                texts.append(to_string(api.rewrite([to_chainform(m) for m in api.morphs(sent)['morphs']], grade)))
                 #print to_string(api.rewrite([to_chainform(m) for m in api.morphs(sent)['morphs']]))
 
     random.shuffle(texts)
@@ -132,6 +133,7 @@ if name:
     rs = api.get_reply(name)
     print rs
     weather = get_weather()
+    grade = rs['grade']
     for r in rs['replies']:
         if u"天気" in r['text']:
             if weather["temp_high"] < 15:
@@ -144,8 +146,8 @@ if name:
                 api.send_reply(name, r['mention_id'], r['user_name'], '天気予報を調べておいたよ！今日の東京の天気は{}。最低気温は{}℃、最高気温は{}℃だよ！'.format(weather["weather"], weather["temp_low"], weather["temp_high"]))
 
         else:
-            t = build_tweet(r['text'].strip().encode('utf-8'))
-            api.send_reply(name, r['mention_id'], r['user_name'], t)
+            t = build_tweet(r['text'].strip().encode('utf-8'), grade)
+            api.send_reply(name, r['mention_id'], r['user_name'], t) #t
 else:
   pass
   #ARGF.each do |line|

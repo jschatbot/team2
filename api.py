@@ -27,13 +27,25 @@ class API:
         return requests.get(self.base+'/tk/markov', params={'surface': seed['norm_surface'].encode('utf-8'), 'pos': seed['pos'].encode('utf-8')}, auth=self.auth, verify=False).json()['morphs']
 
     # 形態素列書き換え器
-    def rewrite(self, morphs):
-        return requests.post(self.base+'/tk/rewrite', json={'rule': 'rewrite_c08.txt', 'morphs': morphs}, auth=self.auth, verify=False).json()['morphs']
+    def rewrite(self, morphs, grade):
+        if(grade == 0):
+            fileName = "2_rewrite0.txt"
+        if(grade == 1):
+            fileName = "2_rewrite1.txt"
+        if(grade == 2):
+            fileName = "2_rewrite2.txt"
+        return requests.post(self.base+'/tk/rewrite', json={'rule': fileName, 'morphs': morphs}, auth=self.auth, verify=False).json()['morphs']
         #return requests.post(self.base+'/tk/rewrite', data={'rule': 'rewrite_c08.txt', 'morphs': morphs}, auth=self.auth, verify=False).json()['morphs']
 
     # シナリオ変換器
-    def trigger(self, morphs):
-        return requests.post(self.base+'/tk/trigger', json={'rule': 'scenario_c08.txt', 'morphs': morphs}, auth=self.auth, verify=False).json()['texts']
+    def trigger(self, morphs, grade):
+        if(grade == 0):
+            fileName = "2_scenario0.txt"
+        if(grade == 1):
+            fileName = "2_scenario1.txt"
+        if(grade == 2):
+            fileName = "2_scenario2.txt"
+        return requests.post(self.base+'/tk/trigger', json={'rule': fileName, 'morphs': morphs}, auth=self.auth, verify=False).json()['texts']
 
     # ツイート検索
     def search_tweet(self, query):
