@@ -41,7 +41,7 @@ def build_tweet(mention, grade):
         for s in seeds:
             #print s[u'norm_surface']
             c = api.markov_chain(s)
-            texts.append(to_string(api.rewrite(c)))
+            texts.append(to_string(api.rewrite(c, grade)))
 
     texts += api.trigger(mentions, grade)
     #print '\n'.join(texts)
