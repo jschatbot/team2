@@ -61,6 +61,16 @@ def build_tweet(mention, grade):
     print texts[0]
     return texts[0]
 
+def get_time():
+    d = datetime.datetime.today()
+    return {
+        "year": int(d.year), 
+        "month": int(d.month),
+        "day": int(d.day),
+        "hour": int(d.hour),
+        "min": int(d.minute),
+        "sec": int(d.second)}
+
 # 天気予報(東京)情報を取得するAPI
 def get_weather():
     d = datetime.datetime.today()
@@ -88,27 +98,58 @@ api = API('https://52.68.75.108')
 api.basic_auth('secret', 'js2015cps')
 name = 'js_devbot02'
 
-if name:
-    rs = api.get_reply(name)
-    print rs
-    weather = get_weather()
-    grade = rs['grade']
-    for r in rs['replies']:
-        if u"天気" in r['text']:
-            if weather["temp_high"] < 15:
-                api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。ブルブル寒いから気をつけなさい！'.format(weather["temp_high"]))
-            elif weather["temp_high"] > 25:
-                api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。メラメラ暑いから気をつけなさい！'.format(weather["temp_high"]))
-            elif u'雨' in weather["weather"]:
-                api.send_reply(name, r['mention_id'], r['user_name'], '今日は雨がザアザア降りそうだから傘を持っていったほうがいいよ！')
-            else:
-                api.send_reply(name, r['mention_id'], r['user_name'], '今日の天気は{}だよ！'.format(weather["weather"]))
+time = get_time()
+if time["min"] == 9:
+    message = [
+            "0時です。ドツボにハマっている人も早く寝たほうがいいつぼ。",
+            "1時です。お月様もつぼのつぼらな瞳に釘付けだつぼ。",
+            "2時です。外も静かになってきて快適なつぼぐらしだつぼ。", 
+            "3時です。タイムラインが遅くなってきて寂しいつぼ。",
+            "4時です。そろそろ早起きする人も出てくるつぼ。", 
+            "5時です。ネタがないつぼ。",
+            "6時です。今日の豆知識。つぼは進化するつぼ。",
+            "7時です。ツボツボツボツボ", 
+            "8時です。ぼつぼつ",
+            "9時です。新ネタがボツになったつぼ。",
+            "10時です。つぼの没落", 
+            "11時です。つぼのなかにこもるのにもいい加減飽きてきたつぼ。",
+            "12時です。もうやめていいですか",
+            "13時です。定期ツイート",
+            "14時です。ボツニア・ヘルツェゴビナ",
+            "もう15時なんですか？",
+            "16時です。早くつぼの外に出たいつぼ",
+            "17時です。当たり障りのないキャラを演じるのはいい加減飽きた", 
+            "18時だけにもう嫌になりました",
+            "19時になったら外に行く", 
+            "20時なので明日から本気だす",
+            "21時は寝る時間", 
+            "22世紀の到来をつぼのなかで待ち続けるつぼ", 
+            "23時は最後の時間"]
 
-        else:
-            t = build_tweet(r['text'].strip().encode('utf-8'), grade)
-            api.send_reply(name, r['mention_id'], r['user_name'], t) #t
-else:
-  pass
+    print message[time["hour"]]
+    print api.send_tweet('js_devbot02', message[time["hour"]])
+
+#if name:
+#    rs = api.get_reply(name)
+#    print rs
+#    weather = get_weather()
+#    grade = rs['grade']
+#    for r in rs['replies']:
+#        if u"天気" in r['text']:
+#            if weather["temp_high"] < 15:
+#                api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。ブルブル寒いから気をつけなさい！'.format(weather["temp_high"]))
+#            elif weather["temp_high"] > 25:
+#                api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。メラメラ暑いから気をつけなさい！'.format(weather["temp_high"]))
+#            elif weather["chance_night"] > 30:
+#                api.send_reply(name, r['mention_id'], r['user_name'], '今日は雨がザアザア降りそうだから傘を持っていったほうがいいよ！')
+#            else:
+#                api.send_reply(name, r['mention_id'], r['user_name'], '天気予報を調べておいたよ！今日の東京の天気は{}。最低気温は{}℃、最高気温は{}℃だよ！'.format(weather["weather"], weather["temp_low"], weather["temp_high"]))
+#
+#        else:
+#            t = build_tweet(r['text'].strip().encode('utf-8'), grade)
+#            api.send_reply(name, r['mention_id'], r['user_name'], t) #t
+#else:
+#  pass
   #ARGF.each do |line|
   #  puts build_tweet(line.rstrip)
 
