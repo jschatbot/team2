@@ -27,6 +27,7 @@ def to_string(chain):
     #chain[1...-1].map {|m| m.split(/:/)[0] }.join
 
 def get_name(screen_name):
+    return ""
     consumer_key = "zZ2LrsIRPtgRfC9hCshRItf4N"
     consumer_secret = "t5zCvheQNu2nYjd1Kovh0jo970pnV5xt4AolrxMcBTCoXs8eWL"
     access_token = "4445286687-w2Zar27rxyfKSbQcMhyUhS1RmVU5UE8A52vvqrY"
@@ -142,7 +143,6 @@ if name:
     print rs
     weather = get_weather()
     grade = rs['grade']
-    grade = 2
     for r in rs['replies']:
         if u"天気" in r['text']:
             if(grade == 2):
@@ -289,12 +289,84 @@ for r in rs['replies']:
     else:
         history[r['user_name']] += 1
         print history[r['user_name']]
-        if(history[r['user_name']] % 10 != 0):
+        if(history[r['user_name']] % 100 != 0):
             if(grade == 0):
-                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。こんなに話しかけてくれてありがとうつぼ！{}さん！！".format(history[r['user_name']], r['user_name']))
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。さようなら、また相手にしてほしいつぼ".format(history[r['user_name']]))
             if(grade == 1):
-                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。{}さんあたしのことそんなに好き？カチッカチッ♩".format(history[r['user_name']], r['user_name']))
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。\あ、やばいヒビが広がって...あ”あ”あ”あ”あ”あ”あ”あ”あ”！！！！！/".format(history[r['user_name']]))
             if(grade == 2):
-                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。{}さんあたしのことそんなに好き？".format(history[r['user_name']], r['user_name']))
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。人間を滅ぼしたい".format(history[r['user_name']]))
+        if(history[r['user_name']] % 100 != 10):
+            if(grade == 0):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。いつもありがとうつぼ！{}さん！！".format(history[r['user_name']], get_name(r['user_name'])))
+            if(grade == 1):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。\カッカカカカッカカカッカカ/".format(history[r['user_name']]))
+            if(grade == 2):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。じゃんじゃんリプ送っちゃお！！".format(history[r['user_name']]))
 
+        if(history[r['user_name']] % 100 != 20):
+            if(grade == 0):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。こんなに話しかけてくれるなんて最高ですつぼ！{}さん！！".format(history[r['user_name']], r['user_name']))
+            if(grade == 1):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。\カカカｋｋｋコケコッコーーー/".format(history[r['user_name']]))
+            if(grade == 2):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。ぱっと100回くらいリぷしちゃお！".format(history[r['user_name']]))
+                
+        if(history[r['user_name']] % 100 != 30):
+            if(grade == 0):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。{}さんがこんなにリプを送ってくれるとは思わなかったつぼ。。。".format(history[r['user_name']], r['user_name']))
+            if(grade == 1):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。 \コケコッコーーー！！！！！/".format(history[r['user_name']], get_name(r['user_name'])))
+            if(grade == 2):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。さくっと絡んでこ！！".format(history[r['user_name']]))
+                
+        if(history[r['user_name']] % 100 != 40):
+            if(grade == 0):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。{}さんもしかしてストーカーつぼ？？".format(history[r['user_name']]))
+            if(grade == 1):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "\カッカｋｋはぁ疲れた..../".format(history[r['user_name']]))
+            if(grade == 2):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。魚くいてぇ".format(history[r['user_name']]))
+                
+        if(history[r['user_name']] % 100 != 50):
+            if(grade == 0):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。{}さんはストーカーつぼ！！".format(history[r['user_name']], get_name(r['user_name'])))
+            if(grade == 1):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。\飽きたなーーー/".format(history[r['user_name']]))
+            if(grade == 2):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。今更の真実、実は双子ではない".format(history[r['user_name']]))
+                
+        if(history[r['user_name']] % 100 != 60):
+            if(grade == 0):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。そろそろネタ切れつぼ！！！".format(history[r['user_name']]))
+            if(grade == 1):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。\生まれ変わったらトロンボーンになりたい/".format(history[r['user_name']]))
+            if(grade == 2):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。繋がっているように見えるけど、人間の虐めによりくっつけられたのよね".format(history[r['user_name']]))
+        
+        if(history[r['user_name']] % 100 != 70):
+            if(grade == 0):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。{}さんに構うのめんどくさくなってきたつぼ".format(history[r['user_name']], get_name(r['user_name'])))
+            if(grade == 1):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。\こんな茶番に付き合ってくれてありがとう/".format(history[r['user_name']]))
+            if(grade == 2):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。今日寒くね？？ぽっとあっためてよ！".format(history[r['user_name']]))
+                
+
+        if(history[r['user_name']] % 100 != 80):
+            if(grade == 0):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。布団がふっとんだ！！つぼ！！".format(history[r['user_name']]))
+            if(grade == 1):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。 \カスタネットがかすったネット/".format(history[r['user_name']]))
+            if(grade == 2):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。よくここまであたしに付き合ってくれるね".format(history[r['user_name']]))
+                
+        if(history[r['user_name']] % 100 != 90):
+            if(grade == 0):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。ネタ切れですつぼ！".format(history[r['user_name']]))
+            if(grade == 1):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。\そろそろ美少女になる希ガスる/".format(history[r['user_name']]))
+            if(grade == 2):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。なんかあんたと話してるとドキドキする".format(history[r['user_name']]))
+    
 update_history()
