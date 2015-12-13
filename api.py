@@ -61,7 +61,7 @@ class API:
 
     # ツイート投稿
     def send_tweet(self, name, message):
-        return requests.post(self.base+'/tweet/simple', data={'bot_name': name, 'message': message}, auth=self.auth, verify=False).json()['result'] == 'true'
+        return requests.post(self.base+'/tweet/simple', json={'bot_name': name, 'message': message}, auth=self.auth, verify=False).json()['result'] == True
 
     # リプライ送信
     def send_reply(self, name, mention_id, user_name, message):
