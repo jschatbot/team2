@@ -71,12 +71,13 @@ def get_weather():
     weather = tree.findall(".//area[4]/info[@date='{date}']/weather".format(date=today))
     chance = tree.findall(".//area[4]/info[@date='{date}']/rainfallchance/period".format(date=today))
     temp = tree.findall(".//area[4]/info[@date='{date}']/temperature/range".format(date=today))
-    return {"tenki": weather[0].text.encode('utf-8'),
-            "chance_am": chance[1].text,
-            "chance_pm": chance[2].text,
-            "chance_night": chance[3].text,
-            "temp_high": temp[0].text,
-            "temp_low": temp[1].text}
+    return {"weather": weather[0].text.encode('utf-8'),
+            "chance_am": int(chance[1].text),
+            "chance_pm": int(chance[2].text),
+            "chance_night": int(chance[3].text),
+            "temp_high": int(temp[0].text),
+            "temp_low": int(temp[1].text),
+            "time": d.hour}
 
 # 警告を無視するための設定
 requests.packages.urllib3.disable_warnings()
@@ -86,17 +87,27 @@ api = API('https://52.68.75.108')
 api.basic_auth('secret', 'js2015cps')
 name = 'js_devbot02'
 
-#if name:
-#    rs = api.get_reply(name)
-#    print rs
-#    for r in rs['replies']:
-#        if '天気' in t['text']:
-#
-#        t = build_tweet(r['text'].strip().encode('utf-8'))
-#        api.send_reply(name, r['mention_id'], r['user_name'], t) #t
-#else:
-#  pass
-#  #ARGF.each do |line|
+if name:
+    rs = api.get_reply(name)
+    print rs
+    weather = get_weather()
+    for r in rs['replies']:
+        if u"天気" in r['text']:
+            if weather["temp_high"] < 15:
+                api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。ブルブル寒いから気をつけなさい！'.format(weather["temp_high"]))
+            elif weather["temp_high"] > 25:
+                api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。メラメラ暑いから気をつけなさい！'.format(weather["temp_high"]))
+            elif u'雨' in weather["weather"]:
+                api.send_reply(name, r['mention_id'], r['user_name'], '今日は雨がザアザア降りそうだから傘を持っていったほうがいいよ！')
+            else:
+                api.send_reply(name, r['mention_id'], r['user_name'], '今日の天気は{}だよ！'.format(weather["weather"]))
+
+        else:
+            t = build_tweet(r['text'].strip().encode('utf-8'))
+            api.send_reply(name, r['mention_id'], r['user_name'], t) #t
+else:
+  pass
+  #ARGF.each do |line|
   #  puts build_tweet(line.rstrip)
 
 
