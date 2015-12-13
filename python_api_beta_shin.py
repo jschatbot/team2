@@ -10,6 +10,8 @@ from api import *
 import urllib2
 import datetime
 import xml.etree.ElementTree as ET
+# 定期ツイート
+import random
 
 def to_chainform(morphs):
     return '%s:%s' % (morphs[u'norm_surface'],morphs[u'pos'])
@@ -90,6 +92,26 @@ def get_weather():
             "temp_low": int(temp[1].text),
             "time": d.hour}
 
+# 履歴取得関係
+history = {}
+for line in open('history.txt', 'r'):
+    item = line[:-1].split(',')
+    history[item[0]] = int(item[1])
+
+def get_history(user_name):
+    if user_name not in history:
+        return 0
+    else:
+        return history[user_name]
+
+def update_history():
+    f = open('history.txt', 'w')
+    for name, times in history.iteritems():
+        f.write('{}, {}\n'.format(name, times))
+    f.close()
+
+
+
 # 警告を無視するための設定
 requests.packages.urllib3.disable_warnings()
 
@@ -98,37 +120,60 @@ api = API('https://52.68.75.108')
 api.basic_auth('secret', 'js2015cps')
 name = 'js_devbot02'
 
+
 time = get_time()
-if time["min"] == 9:
-    message = [
-            "0時です。ドツボにハマっている人も早く寝たほうがいいつぼ。",
-            "1時です。お月様もつぼのつぼらな瞳に釘付けだつぼ。",
-            "2時です。外も静かになってきて快適なつぼぐらしだつぼ。", 
-            "3時です。タイムラインが遅くなってきて寂しいつぼ。",
-            "4時です。そろそろ早起きする人も出てくるつぼ。", 
-            "5時です。ネタがないつぼ。",
-            "6時です。今日の豆知識。つぼは進化するつぼ。",
-            "7時です。ツボツボツボツボ", 
-            "8時です。ぼつぼつ",
-            "9時です。新ネタがボツになったつぼ。",
-            "10時です。つぼの没落", 
-            "11時です。つぼのなかにこもるのにもいい加減飽きてきたつぼ。",
-            "12時です。もうやめていいですか",
-            "13時です。定期ツイート",
-            "14時です。ボツニア・ヘルツェゴビナ",
-            "もう15時なんですか？",
-            "16時です。早くつぼの外に出たいつぼ",
-            "17時です。当たり障りのないキャラを演じるのはいい加減飽きた", 
-            "18時だけにもう嫌になりました",
-            "19時になったら外に行く", 
-            "20時なので明日から本気だす",
-            "21時は寝る時間", 
-            "22世紀の到来をつぼのなかで待ち続けるつぼ", 
-            "23時は最後の時間"]
+if time["min"] == 0:
+    if time["month"]==12 and (time["day"]==24 or time["day"]==25):
+        message = [
+        "メリークリスマス～♪",
+        "サンタさーん！！",
+        "プレゼント欲しい人ー！",
+        "今日はデートです♪みなさんは何するんですか？？",
+        "あたしとデートしてくれる人ー！？"]
+        api.send_tweet('js_devbot02', random.choice(message))
+    elif time["month"]==1 and time["day"]>=1 and time["day"]<=3:
+        message = [
+        "あけましておめでとうございます！！",
+        "良いお年を！！",
+        "お年玉欲しい人ー！！？？",
+        "初詣は行ったかーい？？",
+        "今年もよろしくお願いします！",
+        "もうそろそろあたし消えちゃうよ～～"]
+        api.send_tweet('js_devbot02', random.choice(message))
+    else:
+        message = [
+        "「天気」とリプすると、天気予報するよ！",
+        "話しかけると、色々反応するよ！",
+        "気軽に話しかけてね！",
+        "暇だよー話かけて～～",
+        "話しかけまくると進化するよ！！",
+        "進化はしてからのお楽しみ♪",
+        "人工知能の試験中です！協力してね！！",
+        "人工知能ってかっこいいよね！そう思わん？",
+        "寒いよーー",
+        "眠いよー",
+        "あたしって攻撃的かなぁ？",
+        "疲れたらあたしに相談しな？",
+        "おなかすいてない？",
+        "いつ帰ってくるのー？",
+        "起きたらまずあたしに連絡ね！！",
+        "リプを送るとポイントが溜まっていくよ！"]
+        if time["hour"] >= 22:
+            message.append("寝るときはちゃんと連絡しなさい！！(23時頃)")
+        api.send_tweet('js_devbot02', random.choice(message))
 
-    print message[time["hour"]]
-    print api.send_tweet('js_devbot02', message[time["hour"]])
+# 履歴取得サンプル
+#rs = api.get_reply(name)
+#for r in rs['replies']:
+#    if r['user_name'] not in history:
+#        history[r['user_name']] = 1
+#    else:
+#        history[r['user_name']] += 1
+#        api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。あたしのことそんなに好き？".format(history[r['user_name']]))
+#
+#update_history()
 
+# 天気関係サンプル
 #if name:
 #    rs = api.get_reply(name)
 #    print rs
@@ -150,12 +195,3 @@ if time["min"] == 9:
 #            api.send_reply(name, r['mention_id'], r['user_name'], t) #t
 #else:
 #  pass
-  #ARGF.each do |line|
-  #  puts build_tweet(line.rstrip)
-
-
-#print ' '.join(api.markov_chain({"surface":"ゴリラ", "norm_surface":"ゴリラ", "pos":"一般名詞"}))
-#print ' '.join(api.rewrite(["BOS:BOS", "あたくし:代名詞", "EOS:EOS"]))
-#print ' '.join(api.trigger(["BOS:BOS", "おはよう:感動詞", "EOS:EOS"]))
-
-#print api.rewrite(["BOS:BOS", "むくり:感動詞", "EOS:EOS"]).text
