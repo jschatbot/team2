@@ -120,28 +120,131 @@ api = API('https://52.68.75.108')
 api.basic_auth('secret', 'js2015cps')
 name = 'js_devbot02'
 
+# 天気関係サンプル
+if name:
+    rs = api.get_reply(name)
+    print rs
+    weather = get_weather()
+    grade = rs['grade']
+    grade = 1
+    for r in rs['replies']:
+        if u"天気" in r['text']:
+            if(grade == 2):
+                if weather["temp_high"] < 15:
+                    api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。ブルブル寒いから気をつけなさい！'.format(weather["temp_high"]))
+                elif weather["temp_high"] > 25:
+                    api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。メラメラ暑いから気をつけなさい！'.format(weather["temp_high"]))
+                elif weather["chance_night"] > 30:
+                    api.send_reply(name, r['mention_id'], r['user_name'], '今日は雨がザアザア降りそうだから傘を持っていったほうがいいよ！')
+                else:
+                    api.send_reply(name, r['mention_id'], r['user_name'], '天気予報を調べておいたよ！今日の東京の天気は{}。最低気温は{}℃、最高気温は{}℃だよ！'.format(weather["weather"], weather["temp_low"], weather["temp_high"]))
+            if(grade == 1):
+                if weather["temp_high"] < 15:
+                    api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。ブルブル寒いから気をつけなさい！カチカチッ♪'.format(weather["temp_high"]))
+                elif weather["temp_high"] > 25:
+                    api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。メラメラ暑いから気をつけなさい！カチカチッ♪'.format(weather["temp_high"]))
+                elif weather["chance_night"] > 30:
+                    api.send_reply(name, r['mention_id'], r['user_name'], '今日は雨がザアザア降りそうだから傘を持っていったほうがいいよ！カチカチッ♪')
+                else:
+                    api.send_reply(name, r['mention_id'], r['user_name'], '天気予報を調べておいたよ！今日の東京の天気は{}。最低気温は{}℃、最高気温は{}℃だよ！カチカチッ♪'.format(weather["weather"], weather["temp_low"], weather["temp_high"]))
+            if(grade == 0):
+                if weather["temp_high"] < 15:
+                    api.send_reply(name, r['mention_id'], r['user_name'], 'あなたのために天気予報を見たら最高気温は{}℃だったつぼ。ブルブル寒いから気をつけてくださいつぼ！'.format(weather["temp_high"]))
+                elif weather["temp_high"] > 25:
+                    api.send_reply(name, r['mention_id'], r['user_name'], 'あなたのために天気予報を見たら最高気温は{}℃だったつぼ。メラメラ暑いから気をつけてくださいつぼ！'.format(weather["temp_high"]))
+                elif weather["chance_night"] > 30:
+                    api.send_reply(name, r['mention_id'], r['user_name'], '今日は雨がザアザア降りそうだから傘を持っていったほうがいいつぼ！')
+                else:
+                    api.send_reply(name, r['mention_id'], r['user_name'], '天気予報を調べておいたつぼ！今日の東京の天気は{}。最低気温は{}℃、最高気温は{}℃つぼ！'.format(weather["weather"], weather["temp_low"], weather["temp_high"]))
+        else:
+            t = build_tweet(r['text'].strip().encode('utf-8'), grade)
+            api.send_reply(name, r['mention_id'], r['user_name'], t) #t
+else:
+  pass
 
 time = get_time()
-if time["min"] == 0:
+if time["min"] != 0:
     if time["month"]==12 and (time["day"]==24 or time["day"]==25):
         message = [
+        [
+         "メリークリスマス～♪つぼ！",
+         "サンタさーんつぼ！つぼ！つぼ！",
+         "プレゼント欲しい人ーつぼ！つぼ！",
+         "今日はデートですつぼ♪みなさんは何するんですかつぼ？？つぼ！",
+         "つぼとデートしてくれる人ーつぼ！？"],
+         [
+          "メリークリスマス～♪カチカチッ♪",
+          "サンタさーん！！カチカチッ♪",
+          "プレゼント欲しい人ー！カチカチッ♪",
+          "今日はデートです♪みなさんは何するんですか？？カチカチッ♪",
+          "あたしとデートしてくれる人ー！？カチカチッ♪"],
+          [
         "メリークリスマス～♪",
         "サンタさーん！！",
         "プレゼント欲しい人ー！",
         "今日はデートです♪みなさんは何するんですか？？",
-        "あたしとデートしてくれる人ー！？"]
-        api.send_tweet('js_devbot02', random.choice(message))
+        "あたしとデートしてくれる人ー！？"]]
+        api.send_tweet('js_devbot02', random.choice(message[grade]))
     elif time["month"]==1 and time["day"]>=1 and time["day"]<=3:
         message = [
+        [
+         "あけましておめでとうございますつぼ！つぼ！つぼ！",
+         "良いお年をつぼ！つぼ！つぼ！",
+         "お年玉欲しい人ーつぼ！つぼ！？？つぼ！",
+         "初詣は行ったかーい？？つぼ！",
+         "今年もよろしくお願いしますつぼ！つぼ！",
+         "もうそろそろ消えちゃうよ～～つぼ～～"],
+          [
+          "あけましておめでとうございます！！カチカチッ♪",
+          "良いお年を！！カチカチッ♪",
+          "お年玉欲しい人ー！！？？カチカチッ♪",
+          "初詣は行ったかーい？？カチカチッ♪",
+          "今年もよろしくお願いします！カチカチッ♪",
+          "もうそろそろあたし消えちゃうよ～～カチカチッ♪"],
+          [
         "あけましておめでとうございます！！",
         "良いお年を！！",
         "お年玉欲しい人ー！！？？",
         "初詣は行ったかーい？？",
         "今年もよろしくお願いします！",
-        "もうそろそろあたし消えちゃうよ～～"]
-        api.send_tweet('js_devbot02', random.choice(message))
+        "もうそろそろあたし消えちゃうよ～～"]]
+        api.send_tweet('js_devbot02', random.choice(message[grade]))
     else:
         message = [
+         ["「天気」とリプすると、天気予報するよつぼ！つぼ！",
+         "話しかけると、色々反応するよつぼ！つぼ！",
+         "気軽に話しかけてねつぼ！つぼ！",
+         "暇だよー話かけて～～つぼ！",
+         "話しかけまくると進化するよつぼ！つぼ！つぼ！",
+         "進化はしてからのお楽しみ♪つぼ！",
+         "人工知能の試験中ですつぼ！協力してねつぼ！つぼ！つぼ！",
+         "人工知能ってかっこいいよねつぼ！そう思わん？つぼ！",
+         "寒いよーーつぼ！",
+         "眠いよーつぼ！",
+         "つぼって攻撃的かなぁ？つぼ！",
+         "疲れたらに相談しな？つぼ！",
+         "おなかすいてない？つぼ！",
+         "いつ帰ってくるのー？つぼ！",
+         "起きたらまずに連絡ねつぼ！つぼ！つぼ！",
+         "リプを送るとポイントが溜まっていくよつぼ！"],
+          [
+          "「天気」とリプすると、天気予報するよ！カチカチッ♪",
+          "話しかけると、色々反応するよ！カチカチッ♪",
+          "気軽に話しかけてね！カチカチッ♪",
+          "暇だよー話かけて～～カチカチッ♪",
+          "話しかけまくると進化するよ！！カチカチッ♪",
+          "進化はしてからのお楽しみ♪カチカチッ♪",
+          "人工知能の試験中です！協力してね！！カチカチッ♪",
+          "人工知能ってかっこいいよね！そう思わん？カチカチッ♪",
+          "寒いよーーカチカチッ♪",
+          "眠いよーカチカチッ♪",
+          "あたしって攻撃的かなぁ？カチカチッ♪",
+          "疲れたらあたしに相談しな？カチカチッ♪",
+          "おなかすいてない？カチカチッ♪",
+          "いつ帰ってくるのー？カチカチッ♪",
+          "起きたらまずあたしに連絡ね！！カチカチッ♪",
+          "リプを送るとポイントが溜まっていくよ！カチカチッ♪"],
+          [
         "「天気」とリプすると、天気予報するよ！",
         "話しかけると、色々反応するよ！",
         "気軽に話しかけてね！",
@@ -157,41 +260,27 @@ if time["min"] == 0:
         "おなかすいてない？",
         "いつ帰ってくるのー？",
         "起きたらまずあたしに連絡ね！！",
-        "リプを送るとポイントが溜まっていくよ！"]
+        "リプを送るとポイントが溜まっていくよ！"]]
         if time["hour"] >= 22:
             message.append("寝るときはちゃんと連絡しなさい！！(23時頃)")
-        api.send_tweet('js_devbot02', random.choice(message))
+        api.send_tweet('js_devbot02', random.choice(message[grade]))
+
 
 # 履歴取得サンプル
-#rs = api.get_reply(name)
-#for r in rs['replies']:
-#    if r['user_name'] not in history:
-#        history[r['user_name']] = 1
-#    else:
-#        history[r['user_name']] += 1
-#        api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。あたしのことそんなに好き？".format(history[r['user_name']]))
-#
-#update_history()
+rs = api.get_reply(name)
+for r in rs['replies']:
+    if r['user_name'] not in history:
+        history[r['user_name']] = 1
+    else:
+        history[r['user_name']] += 1
+        print history[r['user_name']]
+        if(history[r['user_name']] % 10 == 0):
+            if(grade == 0):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。こんなに話しかけてくれてありがとうつぼ！".format(history[r['user_name']]))
+            if(grade == 1):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。あたしのことそんなに好き？カチッカチッ♩".format(history[r['user_name']]))
+            if(grade == 2):
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。あたしのことそんなに好き？".format(history[r['user_name']]))
 
-# 天気関係サンプル
-#if name:
-#    rs = api.get_reply(name)
-#    print rs
-#    weather = get_weather()
-#    grade = rs['grade']
-#    for r in rs['replies']:
-#        if u"天気" in r['text']:
-#            if weather["temp_high"] < 15:
-#                api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。ブルブル寒いから気をつけなさい！'.format(weather["temp_high"]))
-#            elif weather["temp_high"] > 25:
-#                api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。メラメラ暑いから気をつけなさい！'.format(weather["temp_high"]))
-#            elif weather["chance_night"] > 30:
-#                api.send_reply(name, r['mention_id'], r['user_name'], '今日は雨がザアザア降りそうだから傘を持っていったほうがいいよ！')
-#            else:
-#                api.send_reply(name, r['mention_id'], r['user_name'], '天気予報を調べておいたよ！今日の東京の天気は{}。最低気温は{}℃、最高気温は{}℃だよ！'.format(weather["weather"], weather["temp_low"], weather["temp_high"]))
-#
-#        else:
-#            t = build_tweet(r['text'].strip().encode('utf-8'), grade)
-#            api.send_reply(name, r['mention_id'], r['user_name'], t) #t
-#else:
-#  pass
+update_history()
+
