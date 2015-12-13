@@ -26,7 +26,7 @@ def to_string(chain):
     return l
     #chain[1...-1].map {|m| m.split(/:/)[0] }.join
 
-def get_name(username):
+def get_name(screen_name):
     consumer_key = "zZ2LrsIRPtgRfC9hCshRItf4N"
     consumer_secret = "t5zCvheQNu2nYjd1Kovh0jo970pnV5xt4AolrxMcBTCoXs8eWL"
     access_token = "4445286687-w2Zar27rxyfKSbQcMhyUhS1RmVU5UE8A52vvqrY"
@@ -34,8 +34,8 @@ def get_name(username):
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_secret)
     api = tweepy.API(auth)
-    user = get_user(username)
-    return user.screen_name
+    user = api.get_user(screen_name)
+    return user.name
 
 def build_tweet(mention, grade):
     print grade
