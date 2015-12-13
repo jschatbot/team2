@@ -37,7 +37,6 @@ class API:
             fileName = "2_rewrite1.txt"
         if(grade == 2):
             fileName = "2_rewrite2.txt"
-        print "\n".join(morphs)
         return requests.post(self.base+'/tk/rewrite', json={'rule': fileName, 'morphs': morphs}, auth=self.auth, verify=False).json()['morphs']
         #return requests.post(self.base+'/tk/rewrite', data={'rule': 'rewrite_c08.txt', 'morphs': morphs}, auth=self.auth, verify=False).json()['morphs']
 

@@ -278,12 +278,12 @@ for r in rs['replies']:
     else:
         history[r['user_name']] += 1
         print history[r['user_name']]
-        if(history[r['user_name']] % 10 == 0):
+        if(history[r['user_name']] % 10 != 0):
             if(grade == 0):
-                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。こんなに話しかけてくれてありがとうつぼ！".format(history[r['user_name']]))
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。こんなに話しかけてくれてありがとうつぼ！{}さん！！".format(history[r['user_name']], r['user_name']))
             if(grade == 1):
-                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。あたしのことそんなに好き？カチッカチッ♩".format(history[r['user_name']]))
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。{}さんあたしのことそんなに好き？カチッカチッ♩".format(history[r['user_name']], r['user_name']))
             if(grade == 2):
-                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。あたしのことそんなに好き？".format(history[r['user_name']]))
+                api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。{}さんあたしのことそんなに好き？".format(history[r['user_name']], r['user_name']))
 
 update_history()
