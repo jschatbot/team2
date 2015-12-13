@@ -262,9 +262,8 @@ if time["min"] != 0:
         "起きたらまずあたしに連絡ね！！",
         "リプを送るとポイントが溜まっていくよ！"]]
         if time["hour"] >= 22:
-            message.append("寝るときはちゃんと連絡しなさい！！(23時頃)")
+            message.append("寝るときはちゃんと連絡しなさい！！")
         api.send_tweet('js_devbot02', random.choice(message[grade]))
-
 
 # 履歴取得サンプル
 rs = api.get_reply(name)
@@ -283,4 +282,3 @@ for r in rs['replies']:
                 api.send_reply('js_devbot02', r['mention_id'], r['user_name'], "{}回目のリプだね。あたしのことそんなに好き？".format(history[r['user_name']]))
 
 update_history()
-
