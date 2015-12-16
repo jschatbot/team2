@@ -9,7 +9,7 @@ __version__ = "1"
 __date__ = "2015/12/07"
 
 import sys
-import MeCab
+#import MeCab
 import re
 import numpy as np
 from gensim.models import word2vec
@@ -28,7 +28,7 @@ class sentence_vectorizer:
         model: gensimで作成したmodelのfile_name
         """
         self.model = word2vec.Word2Vec.load(model_file)
-        self.meca_tag = MeCab.Tagger("mecabrc")
+#        self.meca_tag = MeCab.Tagger("mecabrc")
 
     def make_vector(self, sent):
         """
@@ -85,19 +85,19 @@ class sentence_vectorizer:
         #return [(best_ans, max_cos_similality), (second_ans, second), (thord_ans, thord)]
         return [best_ans, second_ans, thord_ans]
 
-    def do_mecab(self, tweet_text):     # １行受けたら内容語のbowのリストを返す
-        text_wakati = []
-        itemlist    = self.meca_tag.parse(tweet_text)
-        itemlist2    = itemlist.strip().split('\n')
-        for item in itemlist2:
-            if item == "EOS" or item == "": break
-            item2 = item.strip().split("\t")
-            if len(item2) == 1: continue
-            surface = item2[0]
-            #pos   = item2[1].split(",")[0]
-            #if pos == "名詞" or pos == "動詞" or pos == "形容詞" or pos == "副詞":
-            text_wakati.append(surface)
-        return text_wakati
+#    def do_mecab(self, tweet_text):     # １行受けたら内容語のbowのリストを返す
+#        text_wakati = []
+#        itemlist    = self.meca_tag.parse(tweet_text)
+#        itemlist2    = itemlist.strip().split('\n')
+#        for item in itemlist2:
+#            if item == "EOS" or item == "": break
+#            item2 = item.strip().split("\t")
+#            if len(item2) == 1: continue
+#            surface = item2[0]
+#            #pos   = item2[1].split(",")[0]
+#            #if pos == "名詞" or pos == "動詞" or pos == "形容詞" or pos == "副詞":
+#            text_wakati.append(surface)
+#        return text_wakati
 
 
 
