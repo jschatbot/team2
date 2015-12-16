@@ -19,7 +19,6 @@ import w2v_dialog
 
 def to_chainform(morphs):
     return '%s:%s' % (morphs[u'norm_surface'],morphs[u'pos'])
-    #morphs.map {|m| m['norm_surface'] + ':' + m['pos'] }
 
 
 def to_string(chain):
@@ -27,7 +26,6 @@ def to_string(chain):
     for w in chain[1:-1]:
         l += w.split(':')[0]
     return l
-    #chain[1...-1].map {|m| m.split(/:/)[0] }.join
 
 def get_name(screen_name):
     return ""
@@ -45,7 +43,7 @@ def build_tweet(mention, grade):
     print grade
     seeds = []
     mentions = []
-
+    texts = []
     #word2vec
     mentions1 = []
     for m in api.morphs(api.sentences(mention)['sentences'][0])['morphs']:
@@ -53,9 +51,9 @@ def build_tweet(mention, grade):
     r_now = ' '.join(mentions1)[4:-4]
     SV = w2v_dialog.sentence_vectorizer('matrix25.w7.model')
     w2v_list = SV.use_database('NTCIR.wakati.u20', r_now.encode('utf-8'))
-    seeds.append(''.join(w2v_list[0].split()))
-    seeds.append(''.join(w2v_list[1].split()))
-    seeds.append(''.join(w2v_list[2].split()))
+    texts.append(''.join(w2v_list[0].split()))
+    texts.append(''.join(w2v_list[1].split()))
+    texts.append(''.join(w2v_list[2].split()))
 
     for sent in api.sentences(mention)['sentences']:
         for m in api.morphs(sent)['morphs']:
@@ -63,20 +61,19 @@ def build_tweet(mention, grade):
             if m['pos'][-2] == u'名' and m['pos'] != u'代名詞' :
                 #print m
                 seeds.append(m)
-        #print seeds
-    texts = []
+
     for _ in range(0, 5):
         if not seeds: seeds = [{ u'norm_surface': u'BOS', u'pos': u'BOS' }]
         for s in seeds:
             #print s[u'norm_surface']
             c = api.markov_chain(s)
             texts.append(to_string(api.rewrite(c, grade)))
-    print " ".join(mentions)
+#    print " ".join(mentions)
     trigger_result = api.trigger(mentions, grade)
     texts += trigger_result
     texts += trigger_result
     texts += trigger_result
-    print '\n'.join(trigger_result)
+#    print '\n'.join(trigger_result)
 
     for s in seeds:
         #print api.search_tweet(s[u'norm_surface'])
@@ -87,12 +84,10 @@ def build_tweet(mention, grade):
         for t in api.search_reply(s[u'norm_surface'])[u'texts']:
             for sent in api.sentences(t)['sentences']:
                 texts.append(to_string(api.rewrite([to_chainform(m) for m in api.morphs(sent)['morphs']], grade)))
-                #print to_string(api.rewrite([to_chainform(m) for m in api.morphs(sent)['morphs']]))
 
-    #print "\n".join(texts)
-
+    texts = [t for t in texts if t != ""]
     random.shuffle(texts)
-    print texts[0]
+#    print texts[0]
     return texts[0]
 
 def get_time():
@@ -110,6 +105,10 @@ def get_weather():
     d = datetime.datetime.today()
     today = '{year}/{month}/{day}'.format(year=d.year, month=str(d.month).zfill(2), day=str(d.day).zfill(2))
     url  = "http://www.drk7.jp/weather/xml/13.xml"
+    proxy = {'http':'http://10.243.251.11:3128/'}
+    proxy_handler = urllib2.ProxyHandler(proxy)
+    opener = urllib2.build_opener(proxy_handler)
+    urllib2.install_opener(opener)
     res = urllib2.urlopen(url)
     feed = res.read()
     tree = ET.fromstring(feed)
@@ -148,17 +147,24 @@ def update_history():
 requests.packages.urllib3.disable_warnings()
 
 # APIの設定
-api = API('https://52.68.75.108')
-api.basic_auth('secret', 'js2015cps')
+api = API('http://10.243.251.70')
+#api.basic_auth('secret', 'js2015cps')
 name = 'js_tsubot02'
 
 # 天気関係サンプル
 if name:
     rs = api.get_reply(name)
-    weather = get_weather()
+
+    try:
+        weather = get_weather()
+    except:
+        print "天気予報取得失敗"
+        weather = None
+
     grade = rs['grade']
     for r in rs['replies']:
-        if u"天気" in r['text']:
+        print r
+        if weather and u"天気" in r['text']:
             if(grade == 2):
                 if weather["temp_high"] < 15:
                     api.send_reply(name, r['mention_id'], r['user_name'], 'あんたのために天気予報を見たら最高気温は{}℃だったよ。ブルブル寒いから気をつけなさい！'.format(weather["temp_high"]))
@@ -191,6 +197,7 @@ if name:
             api.send_reply(name, r['mention_id'], r['user_name'], t) #t
 else:
   pass
+
 
 time = get_time()
 if time["min"] == 0:
@@ -302,7 +309,6 @@ for r in rs['replies']:
         history[r['user_name']] = 1
     else:
         history[r['user_name']] += 1
-        print history[r['user_name']]
         if(history[r['user_name']] % 100 == 0):
             if(grade == 0):
                 api.send_reply('js_tsubot02', r['mention_id'], r['user_name'], "{}回目のリプだつぼ。さようなら、また相手にしてほしいつぼ".format(history[r['user_name']]))
@@ -384,3 +390,4 @@ for r in rs['replies']:
                 api.send_reply('js_tsubot02', r['mention_id'], r['user_name'], "{}回目のリプだね。なんかあんたと話してるとドキドキする".format(history[r['user_name']]))
     
 update_history()
+
